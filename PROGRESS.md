@@ -1,10 +1,10 @@
 # PROGRESS
 
-Next up: T0.2
+Next up: T1.1
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
-- [ ] T0.2 .gitignore (node_modules, dist, .env*, *.log — keep .env.example), README stub, directory skeleton per plan.md Part 5 → commit
+- [x] T0.2 .gitignore (node_modules, dist, .env*, *.log — keep .env.example), README stub, directory skeleton per plan.md Part 5 → commit
 
 ## Phase 1 — Skeletons
 - [ ] T1.1 Backend init: deps + devDeps per plan Step 1.3, tsconfig, package scripts, minimal Express server with GET /api/health → runs locally → commit
