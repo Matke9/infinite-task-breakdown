@@ -3,6 +3,7 @@ import { PoolClient } from 'pg';
 import { z } from 'zod';
 import { query, withTransaction } from '../db';
 import { authMiddleware } from '../middleware/auth';
+import { NotFoundError } from '../lib/errors';
 
 const router = Router();
 router.use(authMiddleware);
@@ -35,6 +36,29 @@ const createProjectSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(5000).optional(),
 });
+
+const patchProjectSchema = z
+  .object({
+    title: z.string().min(1).max(200).optional(),
+    description: z.string().max(5000).optional(),
+  })
+  .refine((data) => data.title !== undefined || data.description !== undefined, {
+    message: 'At least one field must be provided',
+  });
+
+export async function requireOwnedProject(
+  projectId: string,
+  userId: string,
+): Promise<ProjectRow> {
+  const result = await query<ProjectRow>(
+    'SELECT * FROM projects WHERE id = $1 AND user_id = $2',
+    [projectId, userId],
+  );
+  if (result.rows.length === 0) {
+    throw new NotFoundError();
+  }
+  return result.rows[0];
+}
 
 router.get('/', async (req, res) => {
   const result = await query<ProjectRow>(
@@ -74,6 +98,40 @@ router.post('/', async (req, res) => {
   });
 
   res.status(201).json({ project, nodes: [node] });
+});
+
+router.get('/:id', async (req, res) => {
+  const project = await requireOwnedProject(req.params.id, req.userId as string);
+
+  const nodesResult = await query<NodeRow>(
+    'SELECT * FROM task_nodes WHERE project_id = $1 ORDER BY position, created_at',
+    [project.id],
+  );
+
+  res.json({ project, nodes: nodesResult.rows });
+});
+
+router.patch('/:id', async (req, res) => {
+  const body = patchProjectSchema.parse(req.body);
+  await requireOwnedProject(req.params.id, req.userId as string);
+
+  const result = await query<ProjectRow>(
+    `UPDATE projects
+     SET title = COALESCE($1, title),
+         description = COALESCE($2, description),
+         updated_at = now()
+     WHERE id = $3
+     RETURNING *`,
+    [body.title ?? null, body.description ?? null, req.params.id],
+  );
+
+  res.json({ project: result.rows[0] });
+});
+
+router.delete('/:id', async (req, res) => {
+  await requireOwnedProject(req.params.id, req.userId as string);
+  await query('DELETE FROM projects WHERE id = $1', [req.params.id]);
+  res.status(204).end();
 });
 
 export default router;
