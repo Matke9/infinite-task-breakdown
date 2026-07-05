@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T2.1
+Next up: T2.2 (needs you — branch protection)
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -12,7 +12,7 @@ Next up: T2.1
 - [x] T1.3 .env.example for both (per plan Step 1.5), dotenv loading, verify env read → commit
 
 ## Phase 2 — CI before features
-- [ ] T2.1 .github/workflows/ci.yml per plan Step 2.1 → push → CI green (fix any lint/ts config noise now) → commit
+- [x] T2.1 .github/workflows/ci.yml per plan Step 2.1 → push → CI green (fix any lint/ts config noise now) → commit
 - [ ] T2.2 Guide me through branch protection on main (require CI). From here on: feature branches + PRs.
 
 ## Phase 3 — DB & Auth
