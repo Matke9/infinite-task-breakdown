@@ -20,3 +20,17 @@ on this); Path B (CF Pages + Render free + Neon free, $0 forever) remains the fa
 zero-maintenance/zero-cost is later prioritized over DevOps depth.
 Note: Path A's Phase 9–10 steps that touch external accounts (droplet creation, SSH keys, DNS)
 require Matke's hands on his own accounts; all code (Phases 1–8, Caddyfile, cd.yml) is authored here.
+
+## 002 — Backend toolchain versions resolved newer than plan.md assumed (2026-07)
+`plan.md` predates these releases and pins nothing, so `npm i` pulled current majors:
+- **Express 5.2.x** (plan implicitly assumed Express 4). Kept it — Express 5 is stable/current.
+  Consequence future tasks MUST respect: route wildcards changed (`/api/*` → named form like
+  `/api/*splat`), and async errors now propagate to the error handler without manual `next(err)`.
+  The Caddy `/api/*` matcher (Phase 9) is unaffected — that's Caddy config, not Express routing.
+- **TypeScript 6.0.x** (plan assumed TS 5). TS 6 turned `moduleResolution: "node"` into a hard
+  error; added `"ignoreDeprecations": "6.0"` to `backend/tsconfig.json` to keep `"node"` resolution
+  exactly as specified rather than silently switching resolution modes.
+- **ESLint pinned to 8.x** (deliberate, not resolved): plan.md names `.eslintrc.json` +
+  `@typescript-eslint/parser`/`eslint-plugin`, which ESLint 9 ignores by default. Pinning 8.x
+  honors the plan's named config. Frontend keeps its Vite-template ESLint 9 flat config (separate
+  node_modules, no conflict).
