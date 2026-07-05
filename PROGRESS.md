@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T1.3
+Next up: T2.1
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -9,7 +9,7 @@ Next up: T1.3
 ## Phase 1 — Skeletons
 - [x] T1.1 Backend init: deps + devDeps per plan Step 1.3, tsconfig, package scripts, minimal Express server with GET /api/health → runs locally → commit
 - [x] T1.2 Frontend init: Vite react-ts template, Tailwind via @tailwindcss/vite, deps per plan Step 1.4, scripts → dev server renders → commit
-- [ ] T1.3 .env.example for both (per plan Step 1.5), dotenv loading, verify env read → commit
+- [x] T1.3 .env.example for both (per plan Step 1.5), dotenv loading, verify env read → commit
 
 ## Phase 2 — CI before features
 - [ ] T2.1 .github/workflows/ci.yml per plan Step 2.1 → push → CI green (fix any lint/ts config noise now) → commit
