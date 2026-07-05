@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T5.1 (Phase 5 AI) — note: T5.3+ need your GEMINI_API_KEY; T2.2 + PR still await you
+Next up: T5.3 — BLOCKED on your GEMINI_API_KEY (see checkpoint). Also pending: T2.2 branch protection, first PR.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -29,8 +29,8 @@ Next up: T5.1 (Phase 5 AI) — note: T5.3+ need your GEMINI_API_KEY; T2.2 + PR s
 - [x] T4.4 curl end-to-end pass → PR → merge
 
 ## Phase 5 — AI Integration
-- [ ] T5.1 ai/client.ts: callGemini(prompt, schema) with responseSchema JSON mode, zod validation, one retry on parse failure (plan Step 5.2) → commit
-- [ ] T5.2 ai/prompts.ts: initial-breakdown + expand-node prompts from plan Step 5.3, each with 1–2 few-shot example outputs → commit
+- [x] T5.1 ai/client.ts: callGemini(prompt, schema) with responseSchema JSON mode, zod validation, one retry on parse failure (plan Step 5.2) → commit
+- [x] T5.2 ai/prompts.ts: initial-breakdown + expand-node prompts from plan Step 5.3, each with 1–2 few-shot example outputs → commit
 - [ ] T5.3 POST /api/projects now: create → root node → Gemini breakdown → insert children → return tree → commit
 - [ ] T5.4 POST /api/nodes/:id/expand with max-depth 6 rejection (recursive CTE for depth) → commit
 - [ ] T5.5 Rate limit middleware: 20 AI calls/user/hour, in-memory Map, clear 429 message → curl test → PR → merge
