@@ -50,3 +50,6 @@ default linter is **oxlint**, not ESLint.
 - **React 19 / TS 6 / Vite 8** all resolved to current majors; no code changes needed for the
   skeleton. `tsconfig.app.json` enables `verbatimModuleSyntax` + `erasableSyntaxOnly`, so all
   frontend code MUST use `import type { ... }` for type-only imports (enforced at build).
+- **CI uses Node 22** (plan Step 2.1 said Node 20). Vite 8 and ESLint 10 require Node ≥20.19/22.x;
+  Node 22 is current LTS and matches the version the lockfiles were generated with, so it's the
+  safe floor. Bumped `.github/workflows/ci.yml` (and, later, cd.yml) to `node-version: 22`.
