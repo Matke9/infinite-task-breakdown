@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T2.2 (needs you — branch protection)
+Next up: T3.2 (T2.2 branch protection still pending on you)
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -16,7 +16,7 @@ Next up: T2.2 (needs you — branch protection)
 - [ ] T2.2 Guide me through branch protection on main (require CI). From here on: feature branches + PRs.
 
 ## Phase 3 — DB & Auth
-- [ ] T3.1 migrations/001_init.sql: 4 tables, uuid-ossp, ON DELETE CASCADE, indexes, unique email (plan Step 3.1) → commit
+- [x] T3.1 migrations/001_init.sql: 4 tables, uuid-ossp, ON DELETE CASCADE, indexes, unique email (plan Step 3.1) → commit
 - [ ] T3.2 db/migrate.ts (ordered .sql runner + migrations table) and db/index.ts (Pool + query helper) → migrations run clean on local Postgres → commit
 - [ ] T3.3 middleware/auth.ts (Bearer JWT → req.userId, 401 on fail) → commit
 - [ ] T3.4 routes/auth.ts: signup (zod, bcrypt 10 rounds, JWT), login, /me → commit
