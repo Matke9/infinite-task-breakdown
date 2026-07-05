@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 
@@ -11,7 +12,8 @@ app.get('/api/health', (_req, res) => {
 });
 
 const PORT = Number(process.env.PORT) || 3001;
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
 app.listen(PORT, () => {
-  console.log(`API listening on ${PORT}`);
+  console.log(`API listening on ${PORT} (${NODE_ENV})`);
 });
