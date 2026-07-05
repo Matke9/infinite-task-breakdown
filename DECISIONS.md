@@ -53,3 +53,12 @@ default linter is **oxlint**, not ESLint.
 - **CI uses Node 22** (plan Step 2.1 said Node 20). Vite 8 and ESLint 10 require Node ≥20.19/22.x;
   Node 22 is current LTS and matches the version the lockfiles were generated with, so it's the
   safe floor. Bumped `.github/workflows/ci.yml` (and, later, cd.yml) to `node-version: 22`.
+
+## 004 — Error handling: typed errors + central handler (2026-07)
+Not in plan.md, but a clean addition made during Phase 3–4. Routes throw typed errors and a single
+Express error-handling middleware maps them to responses (`ZodError` → 400 with issue details,
+`NotFoundError` → 404 `{error:'Not found'}`, else 500). Enabled by Express 5, which auto-forwards
+rejected promises from async handlers to the error middleware — so route bodies stay try/catch-free.
+`src/lib/errors.ts` holds the shared `NotFoundError` so both routers and the handler agree on the type.
+Ownership rule: any project/node not owned by `req.userId` returns **404, not 403**, so the API never
+leaks whether a resource exists to a non-owner.

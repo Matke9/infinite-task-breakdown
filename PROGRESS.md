@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T4.1 — but 2 items await you: T2.2 branch protection + opening the PR (see notes)
+Next up: T5.1 (Phase 5 AI) — note: T5.3+ need your GEMINI_API_KEY; T2.2 + PR still await you
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -23,10 +23,10 @@ Next up: T4.1 — but 2 items await you: T2.2 branch protection + opening the PR
 - [x] T3.5 Wire index.ts (cors, json, routes, error handler); curl-test all three endpoints → PR → merge
 
 ## Phase 4 — Project & Node CRUD
-- [ ] T4.1 routes/projects.ts: GET list (updated_at DESC), POST create (project + root node, no AI yet) → commit
-- [ ] T4.2 GET /:id (project + flat node array), PATCH, DELETE (FK cascade) — ownership checks everywhere → commit
-- [ ] T4.3 routes/nodes.ts: POST, PATCH, DELETE; every mutation touches parent project updated_at → commit
-- [ ] T4.4 curl end-to-end pass → PR → merge
+- [x] T4.1 routes/projects.ts: GET list (updated_at DESC), POST create (project + root node, no AI yet) → commit
+- [x] T4.2 GET /:id (project + flat node array), PATCH, DELETE (FK cascade) — ownership checks everywhere → commit
+- [x] T4.3 routes/nodes.ts: POST, PATCH, DELETE; every mutation touches parent project updated_at → commit
+- [x] T4.4 curl end-to-end pass → PR → merge
 
 ## Phase 5 — AI Integration
 - [ ] T5.1 ai/client.ts: callGemini(prompt, schema) with responseSchema JSON mode, zod validation, one retry on parse failure (plan Step 5.2) → commit
