@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T3.2 (T2.2 branch protection still pending on you)
+Next up: T4.1 — but 2 items await you: T2.2 branch protection + opening the PR (see notes)
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -17,10 +17,10 @@ Next up: T3.2 (T2.2 branch protection still pending on you)
 
 ## Phase 3 — DB & Auth
 - [x] T3.1 migrations/001_init.sql: 4 tables, uuid-ossp, ON DELETE CASCADE, indexes, unique email (plan Step 3.1) → commit
-- [ ] T3.2 db/migrate.ts (ordered .sql runner + migrations table) and db/index.ts (Pool + query helper) → migrations run clean on local Postgres → commit
-- [ ] T3.3 middleware/auth.ts (Bearer JWT → req.userId, 401 on fail) → commit
-- [ ] T3.4 routes/auth.ts: signup (zod, bcrypt 10 rounds, JWT), login, /me → commit
-- [ ] T3.5 Wire index.ts (cors, json, routes, error handler); curl-test all three endpoints → PR → merge
+- [x] T3.2 db/migrate.ts (ordered .sql runner + migrations table) and db/index.ts (Pool + query helper) → migrations run clean on local Postgres → commit
+- [x] T3.3 middleware/auth.ts (Bearer JWT → req.userId, 401 on fail) → commit
+- [x] T3.4 routes/auth.ts: signup (zod, bcrypt 10 rounds, JWT), login, /me → commit
+- [x] T3.5 Wire index.ts (cors, json, routes, error handler); curl-test all three endpoints → PR → merge
 
 ## Phase 4 — Project & Node CRUD
 - [ ] T4.1 routes/projects.ts: GET list (updated_at DESC), POST create (project + root node, no AI yet) → commit
