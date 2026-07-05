@@ -1,13 +1,13 @@
 # PROGRESS
 
-Next up: T1.1
+Next up: T1.2
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
 - [x] T0.2 .gitignore (node_modules, dist, .env*, *.log — keep .env.example), README stub, directory skeleton per plan.md Part 5 → commit
 
 ## Phase 1 — Skeletons
-- [ ] T1.1 Backend init: deps + devDeps per plan Step 1.3, tsconfig, package scripts, minimal Express server with GET /api/health → runs locally → commit
+- [x] T1.1 Backend init: deps + devDeps per plan Step 1.3, tsconfig, package scripts, minimal Express server with GET /api/health → runs locally → commit
 - [ ] T1.2 Frontend init: Vite react-ts template, Tailwind via @tailwindcss/vite, deps per plan Step 1.4, scripts → dev server renders → commit
 - [ ] T1.3 .env.example for both (per plan Step 1.5), dotenv loading, verify env read → commit
 
