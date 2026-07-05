@@ -3,6 +3,8 @@ import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import { ZodError } from 'zod';
 import authRouter from './routes/auth';
+import projectsRouter from './routes/projects';
+import { NotFoundError } from './lib/errors';
 
 const app = express();
 
@@ -14,10 +16,15 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/projects', projectsRouter);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ZodError) {
     res.status(400).json({ error: 'Validation failed', details: err.issues });
+    return;
+  }
+  if (err instanceof NotFoundError) {
+    res.status(404).json({ error: 'Not found' });
     return;
   }
   console.error(err);
