@@ -4,6 +4,7 @@ import cors from 'cors';
 import { ZodError } from 'zod';
 import authRouter from './routes/auth';
 import projectsRouter from './routes/projects';
+import nodesRouter from './routes/nodes';
 import { NotFoundError } from './lib/errors';
 
 const app = express();
@@ -17,6 +18,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectsRouter);
+app.use('/api/nodes', nodesRouter);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ZodError) {
