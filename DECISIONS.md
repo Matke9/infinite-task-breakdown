@@ -32,5 +32,21 @@ require Matke's hands on his own accounts; all code (Phases 1–8, Caddyfile, cd
   exactly as specified rather than silently switching resolution modes.
 - **ESLint pinned to 8.x** (deliberate, not resolved): plan.md names `.eslintrc.json` +
   `@typescript-eslint/parser`/`eslint-plugin`, which ESLint 9 ignores by default. Pinning 8.x
-  honors the plan's named config. Frontend keeps its Vite-template ESLint 9 flat config (separate
-  node_modules, no conflict).
+  honors the plan's named config. See 003 for the frontend's separate (ESLint 10 flat) setup.
+
+## 003 — Frontend toolchain resolved newer than plan.md assumed (2026-07)
+`npm create vite@latest` now scaffolds Vite 8 + React 19 + TypeScript 6, and the template's
+default linter is **oxlint**, not ESLint.
+- **Replaced oxlint with ESLint 10 (flat config, `eslint.config.js`).** plan.md Step 1.4 explicitly
+  installs `eslint`, and the backend already uses ESLint — keeping "ESLint everywhere" is a cleaner
+  interview story than introducing a third linter. Backend is ESLint 8 (classic `.eslintrc.json`,
+  per plan), frontend is ESLint 10 (flat config, React-19 template) — separate `node_modules`, no
+  conflict. The plugin shareable-configs (`react-hooks`/`react-refresh`) ship an old `plugins`-array
+  shape ESLint 10 rejects, so the config registers those plugins as objects and sets their rules
+  explicitly instead of spreading the broken shareable configs.
+- **Tailwind v4 via `@tailwindcss/vite`** (plan-era Tailwind was v3). v4 is CSS-first: no
+  `tailwind.config.js` / `postcss.config.js`; the entry CSS is just `@import "tailwindcss";` and
+  theme customization (when needed later) is done in CSS via `@theme`, not a JS config file.
+- **React 19 / TS 6 / Vite 8** all resolved to current majors; no code changes needed for the
+  skeleton. `tsconfig.app.json` enables `verbatimModuleSyntax` + `erasableSyntaxOnly`, so all
+  frontend code MUST use `import type { ... }` for type-only imports (enforced at build).
