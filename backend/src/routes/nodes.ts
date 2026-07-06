@@ -126,13 +126,17 @@ router.post<{ id: string }>('/:id/expand', aiRateLimit, async (req, res) => {
   // the root row's depth both equal the node's true tree depth (root = 1).
   const ancestryResult = await query<AncestorRow>(
     `WITH RECURSIVE anc AS (
-       SELECT id, parent_id, title, 1 AS depth FROM task_nodes WHERE id = $1
+       SELECT id, parent_id, title, 1 AS depth, ARRAY[id] AS path
+         FROM task_nodes
+        WHERE id = $1 AND project_id = $2
        UNION ALL
-       SELECT tn.id, tn.parent_id, tn.title, anc.depth + 1
-         FROM task_nodes tn JOIN anc ON tn.id = anc.parent_id
+       SELECT tn.id, tn.parent_id, tn.title, anc.depth + 1, anc.path || tn.id
+         FROM task_nodes tn
+         JOIN anc ON tn.id = anc.parent_id
+        WHERE tn.project_id = $2 AND NOT (tn.id = ANY(anc.path))
      )
-     SELECT * FROM anc ORDER BY depth DESC;`,
-    [node.id],
+     SELECT id, parent_id, title, depth FROM anc ORDER BY depth DESC;`,
+    [node.id, node.project_id],
   );
   const ancestry = ancestryResult.rows;
   // The CTE's `depth` column counts steps from the target node up to each
