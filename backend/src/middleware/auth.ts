@@ -6,6 +6,12 @@ interface AccessTokenPayload {
 }
 
 export const authMiddleware: RequestHandler = (req, res, next) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ error: 'Server misconfigured' });
+    return;
+  }
+
   const header = req.header('Authorization');
   const [scheme, token] = header?.split(' ') ?? [];
 
@@ -15,10 +21,7 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
   }
 
   try {
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string,
-    ) as AccessTokenPayload;
+    const payload = jwt.verify(token, secret) as AccessTokenPayload;
     req.userId = payload.userId;
     next();
   } catch {
