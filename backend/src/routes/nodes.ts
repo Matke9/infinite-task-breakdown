@@ -34,7 +34,7 @@ const createNodeSchema = z.object({
   parent_id: z.uuid().nullable().optional(),
   title: z.string().min(1).max(200),
   description: z.string().max(5000).optional(),
-  weight: z.number().min(0).max(100).optional(),
+  weight: z.number().min(1).max(10).optional(),
 });
 
 const patchNodeSchema = z.object({
