@@ -13,7 +13,7 @@ Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 compl
 
 ## Phase 2 — CI before features
 - [x] T2.1 .github/workflows/ci.yml per plan Step 2.1 → push → CI green (fix any lint/ts config noise now) → commit
-- [ ] T2.2 Guide me through branch protection on main (require CI). From here on: feature branches + PRs.
+- [x] T2.2 Guide me through branch protection on main (require CI). From here on: feature branches + PRs.
 
 ## Phase 3 — DB & Auth
 - [x] T3.1 migrations/001_init.sql: 4 tables, uuid-ossp, ON DELETE CASCADE, indexes, unique email (plan Step 3.1) → commit
