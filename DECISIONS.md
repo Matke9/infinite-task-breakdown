@@ -54,6 +54,21 @@ default linter is **oxlint**, not ESLint.
   Node 22 is current LTS and matches the version the lockfiles were generated with, so it's the
   safe floor. Bumped `.github/workflows/ci.yml` (and, later, cd.yml) to `node-version: 22`.
 
+## 006 — AI-integration design choices (Phase 5) (2026-07)
+- **Call Gemini BEFORE writing to the DB** on project create (plan.md said create-then-call). The
+  breakdown runs first; only if it succeeds do we open the transaction to insert project + root +
+  children. Two wins: no DB transaction is held open across the ~2.5s AI HTTP call, and a failed AI
+  call leaves **no orphan project** (the request 502s and nothing is written).
+- **AiError → HTTP 502** via the central handler, so AI/transport failures are distinct from 400/404/500.
+- **Depth limit via recursive CTE, root = depth 1, reject expand at depth ≥ 6** (`MAX_DEPTH`). The check
+  runs BEFORE any Gemini call, so a too-deep expand costs zero quota and returns 422 instantly. Frontend
+  T8.1 mirrors this by disabling the ✨ button at depth 6.
+- **Rate limit: in-memory per-user sliding window**, `AI_RATE_LIMIT` (default 20)/hour, applied only to the
+  two AI routes (project-create, node-expand) as route-level middleware after auth; non-AI routes are never
+  limited. In-memory is fine at this scale (single instance); a multi-instance deploy would need shared state.
+- **30s fetch timeout** (AbortSignal.timeout) on the Gemini call — without it a slow/stalled response hangs
+  the request indefinitely; now it fails cleanly as an AiError→502.
+
 ## 005 — Gemini model: gemini-flash-latest, thinking disabled (2026-07)
 plan.md pinned `gemini-2.0-flash`, but that model returns **429 (no free-tier quota)** on Matke's
 key/project, while `gemini-flash-latest` works (it currently resolves to gemini-3.5-flash). Switched

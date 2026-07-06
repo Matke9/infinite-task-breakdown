@@ -4,6 +4,7 @@ import { z } from 'zod';
 // on the current key; gemini-flash-latest works. See DECISIONS.md 005.
 const GEMINI_MODEL = 'gemini-flash-latest';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const GEMINI_TIMEOUT_MS = 30_000;
 
 interface GeminiResponse {
   candidates?: { content?: { parts?: { text?: string }[] } }[];
@@ -46,11 +47,18 @@ export async function callGemini<T>(
 
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
-    const response = await fetch(`${GEMINI_ENDPOINT}?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${GEMINI_ENDPOINT}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
+      });
+    } catch (error) {
+      // Network failure or timeout — surface as an AiError (no silent hang).
+      throw new AiError(`Gemini request failed: ${String(error)}`);
+    }
 
     if (!response.ok) {
       const detail = await response.text().catch(() => '');

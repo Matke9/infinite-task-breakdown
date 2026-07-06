@@ -3,7 +3,10 @@ import { PoolClient } from 'pg';
 import { z } from 'zod';
 import { query, withTransaction } from '../db';
 import { authMiddleware } from '../middleware/auth';
+import { aiRateLimit } from '../middleware/rateLimit';
 import { NotFoundError } from '../lib/errors';
+import { callGemini } from '../ai/client';
+import { initialBreakdownPrompt, breakdownResponseSchema, breakdownSchema } from '../ai/prompts';
 
 const router = Router();
 router.use(authMiddleware);
@@ -68,11 +71,21 @@ router.get('/', async (req, res) => {
   res.json({ projects: result.rows });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', aiRateLimit, async (req, res) => {
   const body = createProjectSchema.parse(req.body);
   const userId = req.userId as string;
 
-  const { project, node } = await withTransaction(async (client: PoolClient) => {
+  // Deviates from plan.md's "create project, then call AI": we call Gemini
+  // BEFORE any DB writes so we're not holding a transaction open across the
+  // ~2.5s AI HTTP call. If Gemini throws, nothing is created (no orphan
+  // project/root node) and the error propagates to the central handler (502).
+  const breakdown = await callGemini(
+    initialBreakdownPrompt(body.title, body.description ?? ''),
+    breakdownResponseSchema,
+    breakdownSchema,
+  );
+
+  const { project, nodes } = await withTransaction(async (client: PoolClient) => {
     const projectResult = await client.query<ProjectRow>(
       `INSERT INTO projects (user_id, title, description)
        VALUES ($1, $2, $3)
@@ -89,15 +102,27 @@ router.post('/', async (req, res) => {
     );
     const rootNode = nodeResult.rows[0];
 
+    const childNodes: NodeRow[] = [];
+    for (let i = 0; i < breakdown.subtasks.length; i++) {
+      const subtask = breakdown.subtasks[i];
+      const childResult = await client.query<NodeRow>(
+        `INSERT INTO task_nodes (project_id, parent_id, title, description, weight, position)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING *`,
+        [insertedProject.id, rootNode.id, subtask.title, subtask.description, subtask.weight, i],
+      );
+      childNodes.push(childResult.rows[0]);
+    }
+
     const updatedProjectResult = await client.query<ProjectRow>(
       `UPDATE projects SET root_node_id = $1 WHERE id = $2 RETURNING *`,
       [rootNode.id, insertedProject.id],
     );
 
-    return { project: updatedProjectResult.rows[0], node: rootNode };
+    return { project: updatedProjectResult.rows[0], nodes: [rootNode, ...childNodes] };
   });
 
-  res.status(201).json({ project, nodes: [node] });
+  res.status(201).json({ project, nodes });
 });
 
 router.get('/:id', async (req, res) => {

@@ -6,6 +6,7 @@ import authRouter from './routes/auth';
 import projectsRouter from './routes/projects';
 import nodesRouter from './routes/nodes';
 import { NotFoundError } from './lib/errors';
+import { AiError } from './ai/client';
 
 const app = express();
 
@@ -27,6 +28,10 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   }
   if (err instanceof NotFoundError) {
     res.status(404).json({ error: 'Not found' });
+    return;
+  }
+  if (err instanceof AiError) {
+    res.status(502).json({ error: 'AI request failed' });
     return;
   }
   console.error(err);
