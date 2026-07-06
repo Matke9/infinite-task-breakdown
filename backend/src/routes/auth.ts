@@ -22,7 +22,11 @@ interface UserRow {
 }
 
 function signToken(userId: string): string {
-  return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not set');
+  }
+  return jwt.sign({ userId }, secret, {
     expiresIn: '7d',
   });
 }
