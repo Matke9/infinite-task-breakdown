@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+// plan.md pinned gemini-2.0-flash, but that model returns 429 (no free-tier quota)
+// on the current key; gemini-flash-latest works. See DECISIONS.md 005.
+const GEMINI_MODEL = 'gemini-flash-latest';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 interface GeminiResponse {
@@ -36,6 +38,9 @@ export async function callGemini<T>(
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema,
+      // flash-latest is a thinking model; we don't need reasoning tokens for a
+      // structured breakdown, so disable them to save quota + latency.
+      thinkingConfig: { thinkingBudget: 0 },
     },
   };
 

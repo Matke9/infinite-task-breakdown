@@ -54,6 +54,15 @@ default linter is **oxlint**, not ESLint.
   Node 22 is current LTS and matches the version the lockfiles were generated with, so it's the
   safe floor. Bumped `.github/workflows/ci.yml` (and, later, cd.yml) to `node-version: 22`.
 
+## 005 — Gemini model: gemini-flash-latest, thinking disabled (2026-07)
+plan.md pinned `gemini-2.0-flash`, but that model returns **429 (no free-tier quota)** on Matke's
+key/project, while `gemini-flash-latest` works (it currently resolves to gemini-3.5-flash). Switched
+the client's model. flash-latest is a *thinking* model — a trivial prompt burned ~207 reasoning
+tokens — which wastes the free-tier quota and adds latency, so we set
+`generationConfig.thinkingConfig.thinkingBudget = 0`. Verified: structured-JSON output still works,
+0 thought-tokens, initial breakdown ~2.4s / expand ~2.7s. Auth uses the `?key=` query param (works
+with the new `AQ.`-prefixed keys). If quota ever tightens, `gemini-flash-lite-latest` is the fallback.
+
 ## 004 — Error handling: typed errors + central handler (2026-07)
 Not in plan.md, but a clean addition made during Phase 3–4. Routes throw typed errors and a single
 Express error-handling middleware maps them to responses (`ZodError` → 400 with issue details,
