@@ -46,7 +46,7 @@ router.post('/signup', async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-  const result = await query<UserRow>(
+  const result = await query<Pick<UserRow, 'id' | 'email' | 'created_at'>>(
     `INSERT INTO users (email, password_hash)
      VALUES ($1, $2)
      RETURNING id, email, created_at`,
