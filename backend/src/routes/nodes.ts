@@ -40,7 +40,7 @@ const createNodeSchema = z.object({
 const patchNodeSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(5000).optional(),
-  weight: z.number().min(0).max(100).optional(),
+  weight: z.number().min(1).max(10).optional(),
   is_complete: z.boolean().optional(),
   is_collapsed: z.boolean().optional(),
   position: z.number().int().optional(),
