@@ -8,7 +8,7 @@ the tree, computed client-side.
 - **Frontend:** React + Vite + TypeScript, Tailwind, Zustand, react-d3-tree, axios, react-router-dom
 - **Backend:** Node + Express + TypeScript, pg, zod, bcrypt, jsonwebtoken
 - **Database:** PostgreSQL
-- **AI:** Google Gemini 2.0 Flash (structured JSON output)
+- **AI:** Google Gemini (gemini-flash-latest; structured JSON output)
 - **CI/CD:** GitHub Actions
 
 ## Structure
