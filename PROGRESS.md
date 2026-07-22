@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.5/T6.6 (ProjectsPage + NewProjectModal — replace placeholders). Auth flow + routing done.
+Next up: T7.1 (Phase 7 — Tree View). Phase 6 (frontend auth & projects) complete. NOTE: project cards omit completion % (DECISIONS 007 — list endpoint has no node data); confirm with Matke if list endpoint should carry it.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -40,8 +40,8 @@ Next up: T6.5/T6.6 (ProjectsPage + NewProjectModal — replace placeholders). Au
 - [x] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) + shared types.ts → commit
 - [x] T6.3 LoginPage + SignupPage with error display → commit
 - [x] T6.4 LandingPage (redirect if logged in) → commit
-- [ ] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
-- [ ] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → PR → merge
+- [x] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit (completion % deferred — DECISIONS 007)
+- [x] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → commit (+ reusable Modal, EditProjectModal)
 
 ## Phase 7 — Tree View (the main event)
 - [ ] T7.1 ProjectDetailPage layout (top bar, 70/30 split) + fetch + flat→nested tree builder util → commit

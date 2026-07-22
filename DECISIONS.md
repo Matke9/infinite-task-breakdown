@@ -86,3 +86,14 @@ rejected promises from async handlers to the error middleware — so route bodie
 `src/lib/errors.ts` holds the shared `NotFoundError` so both routers and the handler agree on the type.
 Ownership rule: any project/node not owned by `req.userId` returns **404, not 403**, so the API never
 leaks whether a resource exists to a non-owner.
+
+## 007 — Project cards omit completion % for now (Phase 6, T6.5) (2026-07)
+plan.md Step 6.6 lists a completion % on each project card. But `GET /api/projects` returns only the
+project rows (`{ projects: [...] }`) — no task nodes — and completion is a client-side roll-up over the
+node tree (Part 3), so it can't be computed on the list page without an N+1 fetch (one `GET
+/api/projects/:id` per card). Decision: **cards show title, truncated description, and updated date; no
+completion badge** in Phase 6. Completion computation lands in Phase 7 (T7.2 `utils/completion.ts`) on the
+detail page where the full node array is already loaded. Cheap ways to restore it later if wanted:
+(a) extend the list endpoint to return a stored/aggregated completion or a node count, or (b) add a
+`GET /api/projects?include=completion` variant. Flagged to Matke; provisional pending his call on whether
+the list endpoint should carry completion.
