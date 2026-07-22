@@ -8,10 +8,9 @@ build/
 # IDE
 .idea/
 
-# Environment variables
-.env
-.env.local
-.env.*.local
+# Environment variables (ignore all .env* but keep the committed example)
+.env*
+!.env.example
 
 # Logs
 logs/
