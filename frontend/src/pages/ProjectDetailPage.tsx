@@ -9,6 +9,7 @@ import { buildTree, computeDepthMap } from '../utils/tree';
 import { computeCompletionMap } from '../utils/completion';
 import { toast } from '../store/toast';
 import TreeNodeCard from '../components/TreeNodeCard';
+import NodeDetailPanel from '../components/NodeDetailPanel';
 
 function completionColor(completion: number): string {
   if (completion < 0.33) return 'bg-red-500';
@@ -37,6 +38,16 @@ function toD3(node: TreeNode, collapsed: Set<string>): RawNodeDatum {
   };
 }
 
+function collectSubtreeIds(node: TreeNode): string[] {
+  const ids: string[] = [];
+  const walk = (n: TreeNode) => {
+    ids.push(n.id);
+    n.children.forEach(walk);
+  };
+  walk(node);
+  return ids;
+}
+
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -53,7 +64,7 @@ export default function ProjectDetailPage() {
   const [titleDraft, setTitleDraft] = useState('');
   const cancelTitleEditRef = useRef(false);
 
-  const [expandingId] = useState<string | null>(null);
+  const [expandingId, setExpandingId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [translate, setTranslate] = useState({ x: 0, y: 80 });
@@ -132,14 +143,92 @@ export default function ProjectDetailPage() {
     setSelectedId(nodeId);
   }
 
-  function addChild(nodeId: string) {
-    void nodeId;
-    toast.info('This action lands in the next update.');
+  async function addChild(nodeId: string) {
+    if (!project) return;
+    const siblings = nodes.filter((n) => n.parent_id === nodeId);
+    const position = siblings.length ? Math.max(...siblings.map((s) => s.position)) + 1 : 0;
+    const tempId = `temp-${crypto.randomUUID()}`;
+    const temp: TaskNode = {
+      id: tempId,
+      project_id: project.id,
+      parent_id: nodeId,
+      title: 'New subtask',
+      description: '',
+      weight: 1,
+      is_complete: false,
+      is_collapsed: false,
+      position,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setNodes((prev) => [...prev, temp]);
+    setCollapsed((prev) => {
+      const n = new Set(prev);
+      n.delete(nodeId);
+      return n;
+    });
+    try {
+      const created = await nodesApi.create({ project_id: project.id, parent_id: nodeId, title: 'New subtask' });
+      setNodes((prev) => prev.map((n) => (n.id === tempId ? created : n)));
+      setSelectedId(created.id);
+    } catch (err) {
+      setNodes((prev) => prev.filter((n) => n.id !== tempId));
+      toast.error(getApiErrorMessage(err, 'Could not add subtask.'));
+    }
   }
 
-  function expandNode(nodeId: string) {
-    void nodeId;
-    toast.info('This action lands in the next update.');
+  async function expandNode(nodeId: string) {
+    setExpandingId(nodeId);
+    try {
+      const children = await nodesApi.expand(nodeId);
+      setNodes((prev) => [...prev, ...children]);
+      setCollapsed((prev) => {
+        const n = new Set(prev);
+        n.delete(nodeId);
+        return n;
+      });
+      toast.success(`Generated ${children.length} subtask${children.length === 1 ? '' : 's'}.`);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, 'Could not generate subtasks.'));
+    } finally {
+      setExpandingId(null);
+    }
+  }
+
+  async function deleteNode(nodeId: string) {
+    const treeNode = nodesById.get(nodeId);
+    if (!treeNode) return;
+    const subtreeIds = collectSubtreeIds(treeNode);
+    const descendantCount = subtreeIds.length - 1;
+    const message =
+      descendantCount > 0
+        ? `This deletes ${descendantCount} subtask${descendantCount === 1 ? '' : 's'}. Continue?`
+        : `Delete "${treeNode.title}"?`;
+    if (!window.confirm(message)) return;
+    const previous = nodes;
+    const toRemove = new Set(subtreeIds);
+    setNodes((prev) => prev.filter((n) => !toRemove.has(n.id)));
+    if (selectedId && toRemove.has(selectedId)) setSelectedId(null);
+    try {
+      await nodesApi.remove(nodeId);
+      toast.success('Task deleted.');
+    } catch (err) {
+      setNodes(previous);
+      toast.error(getApiErrorMessage(err, 'Could not delete task.'));
+    }
+  }
+
+  function editNodeLocal(nodeId: string, patch: { title?: string; description?: string; weight?: number }) {
+    setNodes((prev) => prev.map((n) => (n.id === nodeId ? { ...n, ...patch } : n)));
+  }
+
+  async function saveNode(nodeId: string, patch: { title?: string; description?: string; weight?: number }) {
+    try {
+      const updated = await nodesApi.update(nodeId, patch);
+      setNodes((prev) => prev.map((n) => (n.id === nodeId ? updated : n)));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, 'Could not save changes.'));
+    }
   }
 
   function startEditTitle() {
@@ -320,24 +409,19 @@ export default function ProjectDetailPage() {
             <p className="text-sm text-slate-500">Select a task to see details.</p>
           )}
           {selectedNode && (
-            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-              <h2 className="text-base font-semibold text-slate-900">{selectedNode.title}</h2>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-slate-600">
-                {selectedNode.description || 'No description.'}
-              </p>
-              <dl className="mt-4 space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <dt className="text-slate-500">Weight</dt>
-                  <dd className="font-medium text-slate-900">{selectedNode.weight}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-slate-500">Completion</dt>
-                  <dd className="font-medium text-slate-900">
-                    {Math.round((completionMap.get(selectedNode.id) ?? 0) * 100)}%
-                  </dd>
-                </div>
-              </dl>
-            </div>
+            <NodeDetailPanel
+              key={selectedNode.id}
+              node={selectedNode}
+              depth={depthMap.get(selectedNode.id) ?? 1}
+              expanding={expandingId === selectedNode.id}
+              isRoot={(depthMap.get(selectedNode.id) ?? 1) === 1}
+              onEdit={(patch) => editNodeLocal(selectedNode.id, patch)}
+              onSave={(patch) => void saveNode(selectedNode.id, patch)}
+              onToggleComplete={() => toggleComplete(selectedNode.id)}
+              onAddChild={() => void addChild(selectedNode.id)}
+              onExpand={() => void expandNode(selectedNode.id)}
+              onDelete={() => void deleteNode(selectedNode.id)}
+            />
           )}
         </aside>
       </div>

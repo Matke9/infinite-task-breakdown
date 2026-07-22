@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T7.4/T7.6/T7.7 (NodeDetailPanel + add/delete/AI-expand mutations + autosave). Tree render/collapse/select/toggle-complete done; + and ✨ node buttons are stubbed (toast) pending mutations. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
+Next up: Phase 8 (polish — T8.1–T8.4). Phase 7 (tree view) complete: render, collapse, select, NodeDetailPanel w/ debounced autosave, add/delete/AI-expand mutations, toasts wired. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -47,11 +47,11 @@ Next up: T7.4/T7.6/T7.7 (NodeDetailPanel + add/delete/AI-expand mutations + auto
 - [x] T7.1 ProjectDetailPage layout (top bar, inline title edit, overall %, delete, 70/30 split) + fetch + flat→nested tree builder util → commit
 - [x] T7.2 utils/completion.ts computeCompletion (leaf/weighted-parent) + Vitest tests (13, green) + utils/tree.ts (buildTree, computeDepthMap) + nodesApi → commit
 - [x] T7.3 react-d3-tree render, custom node: title, color-coded %, complete checkbox, collapse toggle, + and ✨ buttons, click-to-select → commit (+/✨ handlers stubbed → T7.6/T7.7)
-- [ ] T7.4 NodeDetailPanel: editable fields, weight slider, debounced autosave → commit
+- [x] T7.4 NodeDetailPanel: editable fields, weight slider, debounced autosave (600ms + flush-on-switch) → commit
 - [x] T7.5 Collapse/expand via Set of collapsed IDs, prune before passing to d3-tree → commit (init from is_collapsed)
-- [ ] T7.6 Add node (optimistic + rollback); delete node (confirm modal when has children) → commit
-- [ ] T7.7 AI expand: loading state on node, append + animate children → commit
-- [ ] T7.8 Toast system (Zustand store + <Toaster/>) wired to AI/save/rate-limit errors → PR → merge
+- [x] T7.6 Add node (optimistic temp-node + rollback); delete node (confirm w/ descendant count, subtree removal) → commit
+- [x] T7.7 AI expand: loading spinner on node/panel, append children, success/error toasts → commit
+- [x] T7.8 Toast system (Zustand store + <Toaster/>) wired to AI/save/rate-limit errors → commit
 
 ## Phase 8 — Polish
 - [ ] T8.1 Depth-limit UX: disabled ✨ + tooltip at depth 6 → commit
