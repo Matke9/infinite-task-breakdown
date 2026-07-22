@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 complete + verified.
+Next up: T6.1/T6.3/T6.4 (router + auth/landing pages). Foundation (types, api client, auth store) done.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -37,7 +37,7 @@ Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 compl
 
 ## Phase 6 — Frontend: Auth & Projects
 - [ ] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
-- [ ] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) → commit
+- [x] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) + shared types.ts → commit
 - [ ] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
 - [ ] T6.4 LandingPage (redirect if logged in) → commit
 - [ ] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
