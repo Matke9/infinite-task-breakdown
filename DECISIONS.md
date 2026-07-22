@@ -98,6 +98,16 @@ detail page where the full node array is already loaded. Cheap ways to restore i
 `GET /api/projects?include=completion` variant. Flagged to Matke; provisional pending his call on whether
 the list endpoint should carry completion.
 
+## 008 — Vitest added to the frontend for completion-logic unit tests (Phase 7, T7.2) (2026-07)
+plan.md Step 7.3 asks for "quick sanity tests" on `computeCompletion`. The frontend had no test
+runner, so added **Vitest** (Vite's native test tool — zero extra config, reuses the Vite pipeline)
+as a devDependency + a `"test": "vitest run"` script. Tests live next to the code they cover
+(`src/utils/completion.test.ts`, `src/utils/tree.test.ts`, 13 tests). Rationale: the weighted
+completion roll-up is the app's core domain logic and the one piece worth locking down with tests.
+Wired into CI as a `Test frontend` step (approved by Matke) so the tests gate merges alongside
+typecheck + lint. Backend still has no tests (its logic is mostly thin CRUD + validated by curl in
+Phases 3–5); revisit if backend logic grows.
+
 ## 008 — Vitest added to the frontend for domain-logic tests (Phase 7, T7.2) (2026-07)
 plan.md Step 7.3/PROGRESS T7.2 call for "quick sanity tests" on `computeCompletion`. Added **Vitest 4.x**
 (dev dependency) with a standalone `vitest.config.ts` (`{ test: { environment: 'node' } }`) and a
