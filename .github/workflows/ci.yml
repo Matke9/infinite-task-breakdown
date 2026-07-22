@@ -33,3 +33,6 @@ jobs:
 
       - name: Lint frontend
         run: cd frontend && npm run lint
+
+      - name: Test frontend
+        run: cd frontend && npm run test
