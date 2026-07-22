@@ -22,11 +22,11 @@ See `plan.md` for the full spec, `PROGRESS.md` for the task checklist, and `DECI
 for the log of deviations from the plan and the reasoning behind them.
 
 ```bash
-# backend
-cd backend && npm run dev        # build | start | lint | typecheck
+# backend — dev server; other scripts: build, start, lint, typecheck
+cd backend && npm run dev
 
-# frontend
-cd frontend && npm run dev       # build | lint | typecheck
+# frontend — dev server; other scripts: build, lint, typecheck
+cd frontend && npm run dev
 ```
 
 > Architecture overview, screenshots, and a "decisions I made and why" section land here

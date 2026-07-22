@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/me', authMiddleware, async (req, res) => {
-  const result = await query<UserRow>(
+  const result = await query<Pick<UserRow, 'id' | 'email' | 'created_at'>>(
     'SELECT id, email, created_at FROM users WHERE id = $1',
     [req.userId],
   );
