@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.1/T6.3/T6.4 (router + auth/landing pages). Foundation (types, api client, auth store) done.
+Next up: T6.5/T6.6 (ProjectsPage + NewProjectModal — replace placeholders). Auth flow + routing done.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -36,10 +36,10 @@ Next up: T6.1/T6.3/T6.4 (router + auth/landing pages). Foundation (types, api cl
 - [x] T5.5 Rate limit middleware: 20 AI calls/user/hour, in-memory Map, clear 429 message → curl test → PR → merge
 
 ## Phase 6 — Frontend: Auth & Projects
-- [ ] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
+- [x] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
 - [x] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) + shared types.ts → commit
-- [ ] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
-- [ ] T6.4 LandingPage (redirect if logged in) → commit
+- [x] T6.3 LoginPage + SignupPage with error display → commit
+- [x] T6.4 LandingPage (redirect if logged in) → commit
 - [ ] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
 - [ ] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → PR → merge
 
