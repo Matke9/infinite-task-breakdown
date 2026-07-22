@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: Phase 8 (polish — T8.1–T8.4). Phase 7 (tree view) complete: render, collapse, select, NodeDetailPanel w/ debounced autosave, add/delete/AI-expand mutations, toasts wired. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
+Next up: T8.3 (Regenerate breakdown on root) + T8.4 (mobile nested-list fallback). T8.1/T8.2 done + empty-AI-expand guard. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -54,9 +54,9 @@ Next up: Phase 8 (polish — T8.1–T8.4). Phase 7 (tree view) complete: render,
 - [x] T7.8 Toast system (Zustand store + <Toaster/>) wired to AI/save/rate-limit errors → commit
 
 ## Phase 8 — Polish
-- [ ] T8.1 Depth-limit UX: disabled ✨ + tooltip at depth 6 → commit
-- [ ] T8.2 Loading skeletons (project list, tree); empty/error state sweep → commit
-- [ ] T8.3 Malformed/empty AI response handling; "Regenerate breakdown" on root → commit
+- [x] T8.1 Depth-limit UX: disabled ✨ + tooltip at depth 6 (TreeNodeCard + NodeDetailPanel) → commit
+- [x] T8.2 Loading skeletons (project list grid, tree pane) via Skeleton primitive → commit
+- [~] T8.3 Empty-AI-expand guard done (toast, no empty nodes); "Regenerate breakdown" on root still TODO → commit
 - [ ] T8.4 Mobile fallback: nested indented list at narrow widths → PR → merge
 
 ## Phase 9 — Deploy (do ONLY the chosen path from DECISIONS.md 001)

@@ -10,6 +10,7 @@ import { computeCompletionMap } from '../utils/completion';
 import { toast } from '../store/toast';
 import TreeNodeCard from '../components/TreeNodeCard';
 import NodeDetailPanel from '../components/NodeDetailPanel';
+import Skeleton from '../components/Skeleton';
 
 function completionColor(completion: number): string {
   if (completion < 0.33) return 'bg-red-500';
@@ -181,6 +182,10 @@ export default function ProjectDetailPage() {
     setExpandingId(nodeId);
     try {
       const children = await nodesApi.expand(nodeId);
+      if (children.length === 0) {
+        toast.info('The AI did not return any subtasks — try rephrasing this task, then expand again.');
+        return;
+      }
       setNodes((prev) => [...prev, ...children]);
       setCollapsed((prev) => {
         const n = new Set(prev);
@@ -370,7 +375,14 @@ export default function ProjectDetailPage() {
       <div className="flex min-h-0 flex-1">
         <div ref={containerRef} className="relative w-[70%] min-w-0 border-r border-slate-200">
           {loading && (
-            <div className="flex h-full items-center justify-center text-slate-500">Loading…</div>
+            <div className="flex h-full flex-col items-center justify-center gap-4">
+              <Skeleton className="h-20 w-56 rounded-lg" />
+              <div className="flex gap-4">
+                <Skeleton className="h-16 w-40 rounded-lg" />
+                <Skeleton className="h-16 w-40 rounded-lg" />
+                <Skeleton className="h-16 w-40 rounded-lg" />
+              </div>
+            </div>
           )}
 
           {!loading && loadError && (

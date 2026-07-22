@@ -5,6 +5,7 @@ import { projectsApi, getApiErrorMessage } from '../api/client';
 import type { Project } from '../types';
 import NewProjectModal from '../components/NewProjectModal';
 import EditProjectModal from '../components/EditProjectModal';
+import Skeleton from '../components/Skeleton';
 
 export default function ProjectsPage() {
   const user = useAuthStore((s) => s.user);
@@ -77,7 +78,18 @@ export default function ProjectsPage() {
         </div>
 
         <div className="mt-6">
-          {loading && <p className="text-slate-500">Loading…</p>}
+          {loading && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="mt-2 h-3 w-full" />
+                  <Skeleton className="mt-2 h-3 w-5/6" />
+                  <Skeleton className="mt-4 h-3 w-24" />
+                </div>
+              ))}
+            </div>
+          )}
 
           {!loading && loadError && (
             <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{loadError}</div>
