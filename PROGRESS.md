@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T8.3 remainder (Regenerate breakdown on root) — last frontend item before deploy (Phases 9–10 need Matke's own accounts). T8.1/T8.2/T8.4 done. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
+Next up: Phase 9 deploy (Path A — DigitalOcean, DECISIONS 001) — needs Matke's own accounts (droplet, SSH, DNS). FRONTEND FEATURE-COMPLETE (Phases 6–8 done). Open items for Matke: (1) cards omit completion % — extend list endpoint? (DECISIONS 007); (2) wire `npm run test` into CI (DECISIONS 008); (3) open PR for this branch when ready. Then Phase 9/10 + README with screenshots.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -56,8 +56,9 @@ Next up: T8.3 remainder (Regenerate breakdown on root) — last frontend item be
 ## Phase 8 — Polish
 - [x] T8.1 Depth-limit UX: disabled ✨ + tooltip at depth 6 (TreeNodeCard + NodeDetailPanel) → commit
 - [x] T8.2 Loading skeletons (project list grid, tree pane) via Skeleton primitive → commit
-- [~] T8.3 Empty-AI-expand guard done (toast, no empty nodes); "Regenerate breakdown" on root still TODO → commit
+- [x] T8.3 Empty-AI response guard (toast, no empty nodes) + "Regenerate breakdown" on root (delete children → re-run AI, server-resync) → commit
 - [x] T8.4 Mobile fallback: nested indented list at narrow widths (useMediaQuery, NestedTaskList, stacked layout < lg) → commit
+- [x] Phase 8 complete — frontend feature-complete. (Plan's "T8.6 PR → merge": open PR when Matke is ready; not auto-created.)
 
 ## Phase 9 — Deploy (do ONLY the chosen path from DECISIONS.md 001)
 ### Path A — DigitalOcean droplet

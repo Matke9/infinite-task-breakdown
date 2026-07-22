@@ -15,6 +15,7 @@ interface NodeDetailPanelProps {
   onAddChild: () => void;
   onExpand: () => void;
   onDelete: () => void;
+  onRegenerate: () => void; // root-only: replace all children with a fresh AI breakdown
 }
 
 const AUTOSAVE_DELAY_MS = 600;
@@ -30,6 +31,7 @@ export default function NodeDetailPanel({
   onAddChild,
   onExpand,
   onDelete,
+  onRegenerate,
 }: NodeDetailPanelProps) {
   const [title, setTitle] = useState(node.title);
   const [description, setDescription] = useState(node.description);
@@ -171,6 +173,18 @@ export default function NodeDetailPanel({
             '✨ Generate subtasks with AI'
           )}
         </button>
+
+        {isRoot && (
+          <button
+            type="button"
+            onClick={onRegenerate}
+            disabled={expanding}
+            title="Delete the current breakdown and generate a fresh one with AI"
+            className="inline-flex items-center justify-center rounded-md border border-indigo-200 bg-white px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            🔄 Regenerate breakdown
+          </button>
+        )}
 
         <button
           type="button"

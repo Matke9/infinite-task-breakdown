@@ -226,6 +226,52 @@ export default function ProjectDetailPage() {
     }
   }
 
+  // Root-only "regenerate breakdown": deletes the root's existing subtrees, then
+  // re-runs the AI breakdown. Destructive + multi-step, so on both success and
+  // failure we resync from the server rather than trust optimistic local state.
+  async function regenerateBreakdown(nodeId: string) {
+    if (!id) return;
+    const treeNode = nodesById.get(nodeId);
+    if (!treeNode) return;
+    const childCount = treeNode.children.length;
+    const message =
+      childCount > 0
+        ? `Regenerate the breakdown? This deletes the current ${childCount} top-level subtask${childCount === 1 ? '' : 's'} (and everything under them), then asks the AI for a fresh breakdown.`
+        : 'Generate an AI breakdown for this project?';
+    if (!window.confirm(message)) return;
+    setExpandingId(nodeId);
+    try {
+      for (const child of treeNode.children) {
+        await nodesApi.remove(child.id);
+      }
+      const children = await nodesApi.expand(nodeId);
+      const fresh = await projectsApi.get(id);
+      setNodes(fresh.nodes);
+      setSelectedId(null);
+      setCollapsed((prev) => {
+        const n = new Set(prev);
+        n.delete(nodeId);
+        return n;
+      });
+      if (children.length === 0) {
+        toast.info('The AI did not return any subtasks — try editing the project description, then regenerate.');
+      } else {
+        toast.success(`Regenerated — ${children.length} subtask${children.length === 1 ? '' : 's'}.`);
+      }
+    } catch (err) {
+      try {
+        const fresh = await projectsApi.get(id);
+        setNodes(fresh.nodes);
+        setSelectedId(null);
+      } catch {
+        // leave local state as-is if the resync also fails
+      }
+      toast.error(getApiErrorMessage(err, 'Could not regenerate breakdown.'));
+    } finally {
+      setExpandingId(null);
+    }
+  }
+
   function editNodeLocal(nodeId: string, patch: { title?: string; description?: string; weight?: number }) {
     setNodes((prev) => prev.map((n) => (n.id === nodeId ? { ...n, ...patch } : n)));
   }
@@ -454,6 +500,7 @@ export default function ProjectDetailPage() {
               onAddChild={() => void addChild(selectedNode.id)}
               onExpand={() => void expandNode(selectedNode.id)}
               onDelete={() => void deleteNode(selectedNode.id)}
+              onRegenerate={() => void regenerateBreakdown(selectedNode.id)}
             />
           )}
         </aside>
