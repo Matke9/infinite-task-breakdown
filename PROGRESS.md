@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T7.1/T7.3–T7.7 (ProjectDetailPage: layout + react-d3-tree render + NodeDetailPanel + mutations). Data layer (tree/completion utils + nodesApi) + T7.2 tests done. NOTE: project cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
+Next up: T7.4/T7.6/T7.7 (NodeDetailPanel + add/delete/AI-expand mutations + autosave). Tree render/collapse/select/toggle-complete done; + and ✨ node buttons are stubbed (toast) pending mutations. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -44,11 +44,11 @@ Next up: T7.1/T7.3–T7.7 (ProjectDetailPage: layout + react-d3-tree render + No
 - [x] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → commit (+ reusable Modal, EditProjectModal)
 
 ## Phase 7 — Tree View (the main event)
-- [ ] T7.1 ProjectDetailPage layout (top bar, 70/30 split) + fetch + flat→nested tree builder util → commit
+- [x] T7.1 ProjectDetailPage layout (top bar, inline title edit, overall %, delete, 70/30 split) + fetch + flat→nested tree builder util → commit
 - [x] T7.2 utils/completion.ts computeCompletion (leaf/weighted-parent) + Vitest tests (13, green) + utils/tree.ts (buildTree, computeDepthMap) + nodesApi → commit
-- [ ] T7.3 react-d3-tree render, custom node: title, color-coded %, complete checkbox, collapse toggle, + and ✨ buttons, click-to-select → commit
+- [x] T7.3 react-d3-tree render, custom node: title, color-coded %, complete checkbox, collapse toggle, + and ✨ buttons, click-to-select → commit (+/✨ handlers stubbed → T7.6/T7.7)
 - [ ] T7.4 NodeDetailPanel: editable fields, weight slider, debounced autosave → commit
-- [ ] T7.5 Collapse/expand via Set of collapsed IDs, prune before passing to d3-tree → commit
+- [x] T7.5 Collapse/expand via Set of collapsed IDs, prune before passing to d3-tree → commit (init from is_collapsed)
 - [ ] T7.6 Add node (optimistic + rollback); delete node (confirm modal when has children) → commit
 - [ ] T7.7 AI expand: loading state on node, append + animate children → commit
 - [ ] T7.8 Toast system (Zustand store + <Toaster/>) wired to AI/save/rate-limit errors → PR → merge
