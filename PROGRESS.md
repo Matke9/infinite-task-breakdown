@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T8.3 (Regenerate breakdown on root) + T8.4 (mobile nested-list fallback). T8.1/T8.2 done + empty-AI-expand guard. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
+Next up: T8.3 remainder (Regenerate breakdown on root) — last frontend item before deploy (Phases 9–10 need Matke's own accounts). T8.1/T8.2/T8.4 done. NOTE: cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -57,7 +57,7 @@ Next up: T8.3 (Regenerate breakdown on root) + T8.4 (mobile nested-list fallback
 - [x] T8.1 Depth-limit UX: disabled ✨ + tooltip at depth 6 (TreeNodeCard + NodeDetailPanel) → commit
 - [x] T8.2 Loading skeletons (project list grid, tree pane) via Skeleton primitive → commit
 - [~] T8.3 Empty-AI-expand guard done (toast, no empty nodes); "Regenerate breakdown" on root still TODO → commit
-- [ ] T8.4 Mobile fallback: nested indented list at narrow widths → PR → merge
+- [x] T8.4 Mobile fallback: nested indented list at narrow widths (useMediaQuery, NestedTaskList, stacked layout < lg) → commit
 
 ## Phase 9 — Deploy (do ONLY the chosen path from DECISIONS.md 001)
 ### Path A — DigitalOcean droplet

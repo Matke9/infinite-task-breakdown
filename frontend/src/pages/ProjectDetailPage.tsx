@@ -11,6 +11,8 @@ import { toast } from '../store/toast';
 import TreeNodeCard from '../components/TreeNodeCard';
 import NodeDetailPanel from '../components/NodeDetailPanel';
 import Skeleton from '../components/Skeleton';
+import NestedTaskList from '../components/NestedTaskList';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 function completionColor(completion: number): string {
   if (completion < 0.33) return 'bg-red-500';
@@ -69,6 +71,7 @@ export default function ProjectDetailPage() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [translate, setTranslate] = useState({ x: 0, y: 80 });
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   useEffect(() => {
     if (!id) return;
@@ -372,8 +375,11 @@ export default function ProjectDetailPage() {
         </button>
       </header>
 
-      <div className="flex min-h-0 flex-1">
-        <div ref={containerRef} className="relative w-[70%] min-w-0 border-r border-slate-200">
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        <div
+          ref={containerRef}
+          className="relative min-h-0 flex-1 border-b border-slate-200 lg:w-[70%] lg:flex-none lg:border-b-0 lg:border-r"
+        >
           {loading && (
             <div className="flex h-full flex-col items-center justify-center gap-4">
               <Skeleton className="h-20 w-56 rounded-lg" />
@@ -400,23 +406,38 @@ export default function ProjectDetailPage() {
           )}
 
           {!loading && !loadError && tree && d3Data && (
-            <Tree
-              data={d3Data}
-              orientation="vertical"
-              pathFunc="step"
-              collapsible={false}
-              renderCustomNodeElement={renderNode}
-              nodeSize={{ x: 260, y: 170 }}
-              separation={{ siblings: 1.1, nonSiblings: 1.3 }}
-              translate={translate}
-              zoomable
-              scaleExtent={{ min: 0.3, max: 1.5 }}
-              zoom={0.8}
-            />
+            isDesktop ? (
+              <Tree
+                data={d3Data}
+                orientation="vertical"
+                pathFunc="step"
+                collapsible={false}
+                renderCustomNodeElement={renderNode}
+                nodeSize={{ x: 260, y: 170 }}
+                separation={{ siblings: 1.1, nonSiblings: 1.3 }}
+                translate={translate}
+                zoomable
+                scaleExtent={{ min: 0.3, max: 1.5 }}
+                zoom={0.8}
+              />
+            ) : (
+              <NestedTaskList
+                root={tree}
+                completionMap={completionMap}
+                collapsed={collapsed}
+                selectedId={selectedId}
+                expandingId={expandingId}
+                onSelect={select}
+                onToggleComplete={toggleComplete}
+                onToggleCollapse={toggleCollapse}
+                onAddChild={(id) => void addChild(id)}
+                onExpand={(id) => void expandNode(id)}
+              />
+            )
           )}
         </div>
 
-        <aside className="w-[30%] min-w-0 overflow-y-auto p-4">
+        <aside className="max-h-[45vh] min-h-0 overflow-y-auto p-4 lg:max-h-none lg:w-[30%]">
           {!selectedNode && (
             <p className="text-sm text-slate-500">Select a task to see details.</p>
           )}
