@@ -7,10 +7,18 @@ import projectsRouter from './routes/projects';
 import nodesRouter from './routes/nodes';
 import { NotFoundError } from './lib/errors';
 import { AiError } from './ai/client';
+import { runMigrations } from './db/migrate';
 
 const app = express();
 
-app.use(cors());
+// CORS allowlist from a comma-separated env var (e.g. the Cloudflare Pages URL).
+// Unset (local dev) => reflect any origin, matching the previous open behavior.
+const corsOrigins = (process.env.CORS_ORIGIN ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors(corsOrigins.length > 0 ? { origin: corsOrigins } : undefined));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
@@ -42,6 +50,24 @@ app.use(errorHandler);
 const PORT = Number(process.env.PORT) || 3001;
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
-app.listen(PORT, () => {
-  console.log(`API listening on ${PORT} (${NODE_ENV})`);
-});
+// On Render (Path B) there is no SSH access to run migrations manually, so the
+// server applies pending migrations at startup before listening. Gated by an env
+// var (set RUN_MIGRATIONS_ON_START=true on Render); local/dev keep running
+// `node dist/db/migrate.js` manually so this stays off unless explicitly enabled.
+async function start(): Promise<void> {
+  if (process.env.RUN_MIGRATIONS_ON_START === 'true') {
+    try {
+      await runMigrations();
+      console.log('migrations up to date');
+    } catch (err) {
+      console.error('failed to run migrations on startup:', err);
+      process.exit(1);
+    }
+  }
+
+  app.listen(PORT, () => {
+    console.log(`API listening on ${PORT} (${NODE_ENV})`);
+  });
+}
+
+void start();

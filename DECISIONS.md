@@ -95,8 +95,9 @@ node tree (Part 3), so it can't be computed on the list page without an N+1 fetc
 completion badge** in Phase 6. Completion computation lands in Phase 7 (T7.2 `utils/completion.ts`) on the
 detail page where the full node array is already loaded. Cheap ways to restore it later if wanted:
 (a) extend the list endpoint to return a stored/aggregated completion or a node count, or (b) add a
-`GET /api/projects?include=completion` variant. Flagged to Matke; provisional pending his call on whether
-the list endpoint should carry completion.
+`GET /api/projects?include=completion` variant. **Resolved (Matke, 2026-07): leave it** — cards stay title/description/updated-date, no
+completion badge. The % is visible on the detail page the moment a project is opened, and adding
+it to the list wasn't worth an N+1 fetch or a backend aggregate for a 1–10 user app.
 
 ## 008 — Vitest added to the frontend for completion-logic unit tests (Phase 7, T7.2) (2026-07)
 plan.md Step 7.3 asks for "quick sanity tests" on `computeCompletion`. The frontend had no test
@@ -119,3 +120,30 @@ project graph and doesn't touch the app build. Tests import `describe/it/expect`
 the divide-by-zero guard, `computeCompletionMap`, and `buildTree`/`computeDepthMap` (orphan-skip, sort,
 depth convention). NOT yet wired into CI (`.github/workflows/ci.yml`) — deferred to avoid touching shared
 CI mid-session; a `npm run test` step in the frontend CI job is a one-line follow-up.
+
+## 009 — Hosting switched to Path B (free forever), superseding 001's Path A (2026-07)
+DECISIONS 001 chose **Path A (DigitalOcean droplet)** on the basis of a $200 GitHub Student Pack
+credit valid ~12 months — enough to run a ~$6/mo droplet free through the job hunt. That basis is
+gone: **DigitalOcean is winding down its Student Pack participation and all such credits expire
+2026-07-31** (confirmed via GitHub community + DO announcements). With ~9 days of credit left,
+Path A now means paying ~$6/mo almost immediately for a marginally better DevOps story.
+Decision: **switch to Path B — Cloudflare Pages (frontend) + Render free web service (backend) +
+Neon free Postgres.** $0 indefinitely. Trade-off accepted: Render free spins down after 15 min
+idle (~30–60s cold start on first hit); mitigated by an **uptime pinger** (Matke opted in — see
+T10B.2: UptimeRobot hitting /api/health every ~10 min, ~744h/mo fits the 750h free cap for one
+service). Neon's 0.5 GB cap is ample at 1–10 users. Path A remains documented in 001 as the
+"if I later want the self-hosted DevOps story and will pay for it" fallback.
+
+Account-independent Path B wiring done in code now (the rest needs Matke's own accounts):
+- **Postgres TLS for Neon:** `backend/src/db/index.ts` enables `ssl: { rejectUnauthorized: false }`
+  when `DATABASE_SSL=true`. rejectUnauthorized:false because Neon's pooled endpoint can present a
+  chain node-postgres won't verify by default — traffic is still encrypted; we skip CA validation.
+  Off by default so local Postgres (no TLS) is unaffected. Use the **pooled** Neon string with
+  `?sslmode=require`.
+- **Migrate-on-startup:** `backend/src/index.ts` runs `runMigrations()` before `app.listen()` when
+  `RUN_MIGRATIONS_ON_START=true` (set on Render — no SSH to run them by hand). Startup exits non-zero
+  if a migration fails. Local/dev keep running `node dist/db/migrate.js` manually (flag stays off).
+- **CORS allowlist:** `backend/src/index.ts` reads a comma-separated `CORS_ORIGIN`; unset = reflect
+  any origin (local dev), set to the Cloudflare Pages URL in production.
+- `.env.example` updated with DATABASE_SSL / RUN_MIGRATIONS_ON_START / CORS_ORIGIN + a Neon URL note.
+- Frontend `_redirects` (SPA fallback) + `.github/workflows/cd.yml` (Path B deploy) — see next commit.

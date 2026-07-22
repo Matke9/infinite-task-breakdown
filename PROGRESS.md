@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: Phase 9 deploy (Path A — DigitalOcean, DECISIONS 001) — needs Matke's own accounts (droplet, SSH, DNS). FRONTEND FEATURE-COMPLETE (Phases 6–8 done). Open items for Matke: (1) cards omit completion % — extend list endpoint? (DECISIONS 007); (2) wire `npm run test` into CI (DECISIONS 008); (3) open PR for this branch when ready. Then Phase 9/10 + README with screenshots.
+Next up: Matke sets up Neon + Render + Cloudflare accounts, adds GitHub secrets, then we do a live Path B smoke test (T9B/T10B). HOSTING = Path B (DECISIONS 009, supersedes 001 — DO credit expires 2026-07-31). Frontend feature-complete (Phases 6–8). Code-side Path B wiring DONE (SSL, migrate-on-startup, CORS allowlist, _redirects, cd.yml). 007 = leave it (final). Vitest in CI (008). Still TODO: open PR for this branch; README with screenshots.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -60,22 +60,22 @@ Next up: Phase 9 deploy (Path A — DigitalOcean, DECISIONS 001) — needs Matke
 - [x] T8.4 Mobile fallback: nested indented list at narrow widths (useMediaQuery, NestedTaskList, stacked layout < lg) → commit
 - [x] Phase 8 complete — frontend feature-complete. (Plan's "T8.6 PR → merge": open PR when Matke is ready; not auto-created.)
 
-## Phase 9 — Deploy (do ONLY the chosen path from DECISIONS.md 001)
+## Phase 9 — Deploy — CHOSEN: Path B (DECISIONS 009, supersedes 001). Skip Path A.
 ### Path A — DigitalOcean droplet
 - [ ] T9A.1 Create droplet (Ubuntu 24.04, $6 1GB + swapfile, or $12 2GB), SSH in, install Node 20 / Postgres / Caddy / pm2; ufw allow 22,80,443
 - [ ] T9A.2 Create taskdb + taskuser; clone repo; production .env (openssl rand -hex 32 for JWT); build, migrate, pm2 start + startup
 - [ ] T9A.3 DNS (freedns subdomain → droplet IP); Caddyfile per plan Step 9.10; HTTPS live end-to-end
 ### Path B — CF Pages + Render + Neon
-- [ ] T9B.1 Neon project; pooled connection string with sslmode=require; pg Pool updated; migrations run at server startup before listen(); verify against Neon locally
-- [ ] T9B.2 Render free web service: root backend, build `npm ci && npm run build`, start `node dist/index.js`, env vars set, auto-deploy OFF, /api/health returns 200 live
-- [ ] T9B.3 CF Pages: build with prod VITE_API_URL, _redirects SPA fallback, deploy; backend CORS allowlist env; full signup→AI→tree smoke test live (note the cold start)
+- [~] T9B.1 CODE DONE: pg Pool SSL via DATABASE_SSL; migrate-on-startup via RUN_MIGRATIONS_ON_START before listen(). MATKE: create Neon project, grab POOLED conn string (?sslmode=require), verify locally
+- [~] T9B.2 CODE DONE: /api/health exists; env vars documented in .env.example. MATKE: create Render service (root=backend, build `npm ci && npm run build`, start `node dist/index.js`), set env vars, auto-deploy OFF
+- [~] T9B.3 CODE DONE: _redirects SPA fallback; CORS allowlist via CORS_ORIGIN env. MATKE: create CF Pages project, set secrets, full signup→AI→tree smoke test live (note cold start)
 
 ## Phase 10 — CD
 ### Path A
 - [ ] T10A.1 Dedicated CI SSH keypair; GitHub secrets (VM_HOST/USER/SSH_KEY/VITE_API_URL); cd.yml per plan Step 10.3; sudoers NOPASSWD lines
 - [ ] T10A.2 Push to main → watch → fix → green; verify live site updated; final branch-protection check
 ### Path B
-- [ ] T10B.1 cd.yml on push to main: typecheck+lint both, build frontend with secret VITE_API_URL, `wrangler pages deploy frontend/dist` (CLOUDFLARE_API_TOKEN + ACCOUNT_ID secrets), then curl Render deploy hook (secret) — deploys only run if checks pass
-- [ ] T10B.2 Push to main → watch → fix → green; verify both live; optional: UptimeRobot ping /api/health every 10 min to dodge cold starts (~744h/mo fits the 750h free cap for one service)
+- [x] T10B.1 CODE DONE: .github/workflows/cd.yml — checks gate deploy, build frontend w/ VITE_API_URL, wrangler pages deploy, curl Render deploy hook. MATKE: add repo secrets (VITE_API_URL, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, RENDER_DEPLOY_HOOK_URL), set CF Pages --project-name
+- [ ] T10B.2 Push to main → watch → fix → green; verify both live; UptimeRobot ping /api/health every ~10 min to dodge cold starts (Matke opted in — DECISIONS 009)
 
 ## Done = README with architecture overview + screenshots + "decisions I made and why" section (pull from DECISIONS.md — that's your interview cheat sheet)
