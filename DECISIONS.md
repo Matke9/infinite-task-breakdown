@@ -97,3 +97,15 @@ detail page where the full node array is already loaded. Cheap ways to restore i
 (a) extend the list endpoint to return a stored/aggregated completion or a node count, or (b) add a
 `GET /api/projects?include=completion` variant. Flagged to Matke; provisional pending his call on whether
 the list endpoint should carry completion.
+
+## 008 — Vitest added to the frontend for domain-logic tests (Phase 7, T7.2) (2026-07)
+plan.md Step 7.3/PROGRESS T7.2 call for "quick sanity tests" on `computeCompletion`. Added **Vitest 4.x**
+(dev dependency) with a standalone `vitest.config.ts` (`{ test: { environment: 'node' } }`) and a
+`"test": "vitest run"` script. Rationale: completion (the weighted roll-up over the node tree) is the app's
+core domain logic and the one piece worth unit-testing; Vitest is the native Vite test runner (zero extra
+build plumbing, shares the Vite transform). Config is kept in its own file so it stays out of `tsc -b`'s
+project graph and doesn't touch the app build. Tests import `describe/it/expect` explicitly from 'vitest'
+(no `globals: true`) to avoid changing tsconfig. 13 tests cover leaf/weighted-parent/3-level-rollup,
+the divide-by-zero guard, `computeCompletionMap`, and `buildTree`/`computeDepthMap` (orphan-skip, sort,
+depth convention). NOT yet wired into CI (`.github/workflows/ci.yml`) — deferred to avoid touching shared
+CI mid-session; a `npm run test` step in the frontend CI job is a one-line follow-up.

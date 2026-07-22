@@ -32,3 +32,7 @@ export interface AuthResponse {
   token: string;
   user: User;
 }
+
+export interface TreeNode extends TaskNode {
+  children: TreeNode[];
+}

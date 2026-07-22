@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T7.1 (Phase 7 — Tree View). Phase 6 (frontend auth & projects) complete. NOTE: project cards omit completion % (DECISIONS 007 — list endpoint has no node data); confirm with Matke if list endpoint should carry it.
+Next up: T7.1/T7.3–T7.7 (ProjectDetailPage: layout + react-d3-tree render + NodeDetailPanel + mutations). Data layer (tree/completion utils + nodesApi) + T7.2 tests done. NOTE: project cards omit completion % (DECISIONS 007); Vitest added (DECISIONS 008, not yet in CI).
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -45,7 +45,7 @@ Next up: T7.1 (Phase 7 — Tree View). Phase 6 (frontend auth & projects) comple
 
 ## Phase 7 — Tree View (the main event)
 - [ ] T7.1 ProjectDetailPage layout (top bar, 70/30 split) + fetch + flat→nested tree builder util → commit
-- [ ] T7.2 utils/completion.ts computeCompletion (leaf/weighted-parent) + quick sanity tests → commit
+- [x] T7.2 utils/completion.ts computeCompletion (leaf/weighted-parent) + Vitest tests (13, green) + utils/tree.ts (buildTree, computeDepthMap) + nodesApi → commit
 - [ ] T7.3 react-d3-tree render, custom node: title, color-coded %, complete checkbox, collapse toggle, + and ✨ buttons, click-to-select → commit
 - [ ] T7.4 NodeDetailPanel: editable fields, weight slider, debounced autosave → commit
 - [ ] T7.5 Collapse/expand via Set of collapsed IDs, prune before passing to d3-tree → commit

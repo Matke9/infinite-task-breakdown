@@ -55,6 +55,37 @@ export const authApi = {
   },
 };
 
+export const nodesApi = {
+  create(input: {
+    project_id: string;
+    parent_id: string | null;
+    title: string;
+    description?: string;
+    weight?: number;
+  }): Promise<TaskNode> {
+    return api.post('/nodes', input).then((r) => r.data.node);
+  },
+  update(
+    id: string,
+    patch: {
+      title?: string;
+      description?: string;
+      weight?: number;
+      is_complete?: boolean;
+      is_collapsed?: boolean;
+      position?: number;
+    },
+  ): Promise<TaskNode> {
+    return api.patch(`/nodes/${id}`, patch).then((r) => r.data.node);
+  },
+  remove(id: string): Promise<void> {
+    return api.delete(`/nodes/${id}`).then(() => undefined);
+  },
+  expand(id: string): Promise<TaskNode[]> {
+    return api.post(`/nodes/${id}/expand`).then((r) => r.data.nodes);
+  },
+};
+
 export const projectsApi = {
   list(): Promise<Project[]> {
     return api.get('/projects').then((r) => r.data.projects);
