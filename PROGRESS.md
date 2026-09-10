@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.2 (auth store + axios client; replace ProtectedRoute's localStorage stub with the store). Backend Phases 1–5 complete + verified.
+Next up: T6.3 (LoginPage + SignupPage against local backend — run `npm ci` in backend first). Backend Phases 1–5 complete + verified.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -37,7 +37,7 @@ Next up: T6.2 (auth store + axios client; replace ProtectedRoute's localStorage 
 
 ## Phase 6 — Frontend: Auth & Projects
 - [x] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
-- [ ] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) → commit
+- [x] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) → commit
 - [ ] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
 - [ ] T6.4 LandingPage (redirect if logged in) → commit
 - [ ] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
