@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 complete + verified.
+Next up: T6.2 (auth store + axios client; replace ProtectedRoute's localStorage stub with the store). Backend Phases 1–5 complete + verified.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -36,7 +36,7 @@ Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 compl
 - [x] T5.5 Rate limit middleware: 20 AI calls/user/hour, in-memory Map, clear 429 message → curl test → PR → merge
 
 ## Phase 6 — Frontend: Auth & Projects
-- [ ] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
+- [x] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
 - [ ] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) → commit
 - [ ] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
 - [ ] T6.4 LandingPage (redirect if logged in) → commit
