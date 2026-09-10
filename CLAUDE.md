@@ -16,7 +16,7 @@ AI-powered recursive task breakdown web app. Users create a project, Gemini brea
 ## ⚠️ Hosting change (supersedes plan.md Phase 9–10)
 Oracle Cloud is **out** — no VM capacity. Expected load is tiny (1–10 users). Two paths, decision recorded in `DECISIONS.md` entry 001:
 
-- **Path A — DigitalOcean droplet via GitHub Student Pack** ($200 credit, valid 12 months, new-account only). Keeps plan.md's VM deployment (Caddy + pm2 + Postgres on the box, SSH-based CD) almost verbatim; use `ufw` instead of Oracle's iptables steps. Best DevOps/interview story; costs real money (~$6/mo) after credit year ends.
+- **Path A — Google Cloud e2-micro (Always Free tier)** — see DECISIONS.md 007 (DigitalOcean Student Pack credit fell through). Keeps plan.md's VM deployment (Caddy + pm2 + Postgres on the box, SSH-based CD) almost verbatim; use `ufw` instead of Oracle's iptables steps. Best DevOps/interview story; $0 indefinitely as long as the VM stays inside free-tier limits (1× e2-micro in us-west1/us-central1/us-east1, 30 GB **standard** persistent disk, 1 GB egress/month).
 - **Path B — free-forever PaaS:** frontend on Cloudflare Pages, backend on Render free web service, DB on Neon free Postgres. $0 indefinitely, but Render free spins down after 15 min idle (30–60 s cold start) and Neon caps at 0.5 GB. Do **not** use Render's free Postgres — it is deleted after 30 days.
 
 Phases 1–8 are identical either way. Path-specific notes:

@@ -60,10 +60,10 @@ Next up: T6.1 (Phase 6 — frontend auth & projects). Backend Phases 1–5 compl
 - [ ] T8.4 Mobile fallback: nested indented list at narrow widths → PR → merge
 
 ## Phase 9 — Deploy (do ONLY the chosen path from DECISIONS.md 001)
-### Path A — DigitalOcean droplet
-- [ ] T9A.1 Create droplet (Ubuntu 24.04, $6 1GB + swapfile, or $12 2GB), SSH in, install Node 20 / Postgres / Caddy / pm2; ufw allow 22,80,443
+### Path A — Google Cloud e2-micro (Always Free; DECISIONS 007)
+- [ ] T9A.1 Create e2-micro VM (us-east1, Ubuntu 24.04, 30 GB standard PD, allow HTTP/HTTPS, static external IP), add SSH key, SSH in, 2 GB swapfile, install Node 22 / Postgres / Caddy / pm2; ufw allow 22,80,443
 - [ ] T9A.2 Create taskdb + taskuser; clone repo; production .env (openssl rand -hex 32 for JWT); build, migrate, pm2 start + startup
-- [ ] T9A.3 DNS (freedns subdomain → droplet IP); Caddyfile per plan Step 9.10; HTTPS live end-to-end
+- [ ] T9A.3 DNS (freedns subdomain → VM static IP); Caddyfile per plan Step 9.10; HTTPS live end-to-end
 ### Path B — CF Pages + Render + Neon
 - [ ] T9B.1 Neon project; pooled connection string with sslmode=require; pg Pool updated; migrations run at server startup before listen(); verify against Neon locally
 - [ ] T9B.2 Render free web service: root backend, build `npm ci && npm run build`, start `node dist/index.js`, env vars set, auto-deploy OFF, /api/health returns 200 live

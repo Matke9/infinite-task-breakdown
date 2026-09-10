@@ -86,3 +86,21 @@ rejected promises from async handlers to the error middleware — so route bodie
 `src/lib/errors.ts` holds the shared `NotFoundError` so both routers and the handler agree on the type.
 Ownership rule: any project/node not owned by `req.userId` returns **404, not 403**, so the API never
 leaks whether a resource exists to a non-owner.
+
+## 007 — Hosting: DigitalOcean replaced by Google Cloud e2-micro (2026-09-10)
+The GitHub Student Pack DigitalOcean credit that Decision 001 relied on never materialized, so
+Path A as written had a real ~$6/mo cost from day one. Re-surveyed free tiers (Sept 2026):
+Oracle still has no capacity; AWS moved new accounts to a 6-month credit model; Fly.io and
+Railway dropped free tiers; Supabase free pauses after 7 idle days; Azure for Students needs a
+verifiable university email (same barrier that sank the Student Pack). Google Cloud's
+**Always Free e2-micro** is the only permanently free VM left among the major providers.
+Decision: **Path A stays, host = Google Cloud e2-micro.** Rationale: preserves the full VM
+DevOps story from plan.md (self-hosted Postgres, Caddy auto-TLS, pm2, ufw, SSH-based CD from
+GitHub Actions) at $0 indefinitely, and avoids Path B's 30–60 s Render cold start during live
+demos. Constraints accepted: VM must live in us-west1/us-central1/us-east1 (~120 ms from
+Serbia — fine for this app); 1 GB RAM (add a 2 GB swapfile, same as the $6 droplet plan);
+30 GB **standard** (not balanced) persistent disk; 1 GB/month egress cap (trivial at 1–10 users);
+a card must be on file for account verification; the trial must be upgraded to a full billing
+account so the VM is not paused when the 90-day trial ends (free-tier usage is still $0 after
+upgrade). A $1 budget alert guards against accidental charges. Path B (CF Pages + Render + Neon)
+remains the fallback. Only T9A.1/T9A.3 wording changed; T10A.* (SSH-key CD) is unchanged.
