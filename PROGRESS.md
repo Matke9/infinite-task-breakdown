@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.5 (ProjectsPage). Local dev: Postgres runs in Docker container `taskdb` (postgres:16); backend/.env exists (Gemini key still placeholder). Backend Phases 1–5 complete + verified.
+Next up: T6.6 (NewProjectModal — needs a real GEMINI_API_KEY in backend/.env). Then Phase 6 PR. Local dev: Postgres runs in Docker container `taskdb` (postgres:16); backend/.env exists (Gemini key still placeholder). Backend Phases 1–5 complete + verified.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -40,7 +40,7 @@ Next up: T6.5 (ProjectsPage). Local dev: Postgres runs in Docker container `task
 - [x] T6.2 store/auth.ts (token/user, localStorage persist) + api/client.ts (axios, auth header, logout-on-401) → commit
 - [x] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
 - [x] T6.4 LandingPage (redirect if logged in) → commit
-- [ ] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
+- [x] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
 - [ ] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → PR → merge
 
 ## Phase 7 — Tree View (the main event)

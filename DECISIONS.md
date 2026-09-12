@@ -86,3 +86,15 @@ rejected promises from async handlers to the error middleware — so route bodie
 `src/lib/errors.ts` holds the shared `NotFoundError` so both routers and the handler agree on the type.
 Ownership rule: any project/node not owned by `req.userId` returns **404, not 403**, so the API never
 leaks whether a resource exists to a non-owner.
+
+## 008 — No completion % on project cards (2026-09-12)
+plan.md Step 6.6 lists "completion %" on each ProjectsPage card, but completion is computed
+client-side from a project's nodes (Part 3) and `GET /api/projects` returns projects only, no
+nodes. Showing it on cards would need either one tree fetch per card (N requests on the list
+page) or a server-side rollup (duplicating the weighted algorithm before Phase 7 even writes it).
+Decision: **cards show title, description, updated date only; completion % lives on the detail
+page.** Also considered and rejected: persisting per-node percentages and updating them on
+completion. Every ancestor changes on any leaf toggle / add / delete / reweight, so stored values
+must be resynced on every mutation and any miss shows stale numbers — while a full recompute is
+one tree walk in the browser. If the tree view ever feels slow, memoize in React; don't persist.
+
