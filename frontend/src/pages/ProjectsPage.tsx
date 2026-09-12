@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/auth'
 import ProjectCard from '../components/ProjectCard'
 import EditProjectModal from '../components/EditProjectModal'
 import ConfirmModal from '../components/ConfirmModal'
+import NewProjectModal from '../components/NewProjectModal'
 
 export default function ProjectsPage() {
   const user = useAuthStore((s) => s.user)
@@ -88,15 +89,7 @@ export default function ProjectsPage() {
           onClose={() => setDeleting(null)}
         />
       )}
-      {creating && (
-        <ConfirmModal
-          title="Coming in T6.6"
-          message="The new-project modal is the next task."
-          confirmLabel="OK"
-          onConfirm={async () => setCreating(false)}
-          onClose={() => setCreating(false)}
-        />
-      )}
+      {creating && <NewProjectModal onClose={() => setCreating(false)} />}
     </div>
   )
 }

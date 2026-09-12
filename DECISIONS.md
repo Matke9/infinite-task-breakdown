@@ -98,3 +98,16 @@ completion. Every ancestor changes on any leaf toggle / add / delete / reweight,
 must be resynced on every mutation and any miss shows stale numbers — while a full recompute is
 one tree walk in the browser. If the tree view ever feels slow, memoize in React; don't persist.
 
+## 009 — Gemini 503s are frequent; client needs transient-error retry (2026-09-12, found in T6.6)
+First live end-to-end test of project creation failed with a 502. Root cause was not our code:
+`gemini-flash-latest` returns **503 UNAVAILABLE ("model experiencing high demand")** on roughly
+1 call in 3 right now. `ai/client.ts` retries only on *parse* failure (DECISIONS 006); any non-OK
+HTTP status throws immediately, so a transient 503 becomes a user-facing 502.
+Decision: **add T5.6** — retry 503/429/5xx with short exponential backoff (2 extra attempts,
+~1s/2s), keeping the existing parse-failure retry and the 30s per-attempt timeout. Non-transient
+statuses (400, 403) must still fail fast. Deferred out of T6.6 rather than fixed inline, per the
+"split the task" rule; the frontend half of T6.6 is done and correctly surfaced the 502.
+Also observed (no action yet): `gemini-flash-latest` now resolves to **gemini-3.8-flash** (was
+3.5-flash in DECISIONS 005). `thinkingBudget: 0` is still honoured for structured-output calls
+(0 thought tokens), though a plain unstructured call did spend 54 — our calls are all structured.
+

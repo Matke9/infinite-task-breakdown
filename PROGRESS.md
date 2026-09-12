@@ -1,6 +1,6 @@
 # PROGRESS
 
-Next up: T6.6 (NewProjectModal — needs a real GEMINI_API_KEY in backend/.env). Then Phase 6 PR. Local dev: Postgres runs in Docker container `taskdb` (postgres:16); backend/.env exists (Gemini key still placeholder). Backend Phases 1–5 complete + verified.
+Next up: open the Phase 6 PR (branch feat/t6.1-router), then T7.1. Also queued: T5.6 (retry Gemini 503s — see DECISIONS 009). Local dev: Postgres runs in Docker container `taskdb` (postgres:16); backend/.env exists (Gemini key still placeholder). Backend Phases 1–5 complete + verified.
 
 ## Phase 0 — Bootstrap
 - [x] T0.1 Repo created; plan.md, CLAUDE.md, PROGRESS.md, DECISIONS.md committed
@@ -34,6 +34,7 @@ Next up: T6.6 (NewProjectModal — needs a real GEMINI_API_KEY in backend/.env).
 - [x] T5.3 POST /api/projects now: create → root node → Gemini breakdown → insert children → return tree → commit
 - [x] T5.4 POST /api/nodes/:id/expand with max-depth 6 rejection (recursive CTE for depth) → commit
 - [x] T5.5 Rate limit middleware: 20 AI calls/user/hour, in-memory Map, clear 429 message → curl test → PR → merge
+- [ ] T5.6 Retry transient Gemini 503/429 with backoff; surface AiError detail in dev (found during T6.6 — see DECISIONS 009)
 
 ## Phase 6 — Frontend: Auth & Projects
 - [x] T6.1 Router (/, /login, /signup, /projects, /projects/:id) + ProtectedRoute → commit
@@ -41,7 +42,7 @@ Next up: T6.6 (NewProjectModal — needs a real GEMINI_API_KEY in backend/.env).
 - [x] T6.3 LoginPage + SignupPage with error display → works against local backend → commit
 - [x] T6.4 LandingPage (redirect if logged in) → commit
 - [x] T6.5 ProjectsPage: header/logout, card grid, hover edit/delete, empty state, floating + → commit
-- [ ] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → PR → merge
+- [x] T6.6 NewProjectModal: validation, 10–15s AI loading state, error-in-modal, navigate on success → PR → merge
 
 ## Phase 7 — Tree View (the main event)
 - [ ] T7.1 ProjectDetailPage layout (top bar, 70/30 split) + fetch + flat→nested tree builder util → commit
